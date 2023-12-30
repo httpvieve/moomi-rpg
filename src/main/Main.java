@@ -8,7 +8,7 @@ public class Main {
         screen.setResizable (false);
         screen.setTitle ("temp game title");
         GamePanel gamePanel = new GamePanel();
-        screen.add (gamePanel);
+        screen.add (gamePanel); 
 
         screen.pack();
         screen.setLocationRelativeTo (null);
