@@ -26,18 +26,18 @@ public class Player extends Entity {
     }
     public void getPlayerImage () {
         try {
-            up1 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/UP_1.png")));
-            up2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/UP_2.png"));
-            up3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/UP_3.png"));
-            down1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/DOWN_1.png"));
-            down2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/DOWN_2.png"));
-            down3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/DOWN_3.png"));
-            left1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/LEFT_1.png"));
-            left2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/LEFT_2.png"));
-            left3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/LEFT_3.png"));
-            right1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/RIGHT_1.png"));
-            right2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/RIGHT_2.png"));
-            right3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/RIGHT_3.png"));
+            up[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/UP_1.png")));
+            up[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/UP_2.png")));
+            up[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/UP_3.png")));
+            down[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/DOWN_1.png")));
+            down[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/DOWN_2.png")));
+            down[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/DOWN_3.png")));
+            left[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/LEFT_1.png")));
+            left[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/LEFT_2.png")));
+            left[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/LEFT_3.png")));
+            right[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/RIGHT_1.png")));
+            right[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/RIGHT_2.png")));
+            right[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("player/RIGHT_3.png")));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,18 +45,23 @@ public class Player extends Entity {
     }
     public void update () {
 
-        if (keyHandler.up) {
-            direction = "up";
-            y -= speed;
-        } else if (keyHandler.down) {
-            direction = "down";
-            y += speed;
-        } else if (keyHandler.left) {
-            direction = "left";
-            x -= speed;
-        } else if (keyHandler.right) {
-            direction = "right";
-            x += speed;
+        if (keyHandler.up || keyHandler.down||keyHandler.left||keyHandler.right) {
+            if (keyHandler.up) {
+                direction = "up";
+                y -= speed;
+            } else if (keyHandler.down) {
+                direction = "down";
+                y += speed;
+            } else if (keyHandler.left) {
+                direction = "left";
+                x -= speed;
+            } else {
+                direction = "right";
+                x += speed;
+            }
+            spriteCounter++;
+            if (spriteCounter % 12 == 0 && spriteIndex < frames) spriteIndex++;
+            if (spriteIndex == frames) spriteIndex = 0;
         }
     }
     public void draw (Graphics2D temp) {
@@ -64,21 +69,13 @@ public class Player extends Entity {
 //        temp.fillRect(x, y, game.tileSize, game.tileSize);
         ///\setDefaultData();
         getPlayerImage();
-        BufferedImage image = null;
-        switch (direction) {
-            case "up":
-                image = up1;
-                break;
-            case "down":
-                image = down1;
-                break;
-            case "left":
-                image = left1;
-                break;
-            case "right":
-                image = right1;
-                break;
-        }
+        BufferedImage image = switch (direction) {
+            case "up" -> up[spriteIndex];
+            case "down" -> down[spriteIndex];
+            case "left" -> left[spriteIndex];
+            case "right" -> right[spriteIndex];
+            default -> null;
+        };
         temp.drawImage (image, x, y, game.tileSize, game.tileSize, null);
     }
 
